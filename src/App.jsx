@@ -1,10 +1,24 @@
 
-
+import { useEffect } from 'react';
 import { useState } from 'react';
 import './App.css';
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const storedTodos = localStorage.getItem("todos");
+    return storedTodos ? JSON.parse(storedTodos) : [];
+  });
   const [input, setInput] = useState('');
+
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos'));
+    if (storedTodos) {
+      setTodos(storedTodos);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = () => {
     if (input) {
